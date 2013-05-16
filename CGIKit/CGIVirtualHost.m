@@ -10,4 +10,13 @@
 
 @implementation CGIVirtualHost
 
+- (id)initWithListenURL:(NSURL *)URL
+{
+    if (self = [super init])
+    {
+        self.listenURL = URL;
+    }
+    return self;
+}
+
 @end

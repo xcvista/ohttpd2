@@ -10,4 +10,29 @@
 
 @implementation CGIListener
 
+- (id)initWithPort:(uint16_t)port
+{
+    if (self = [super init])
+    {
+        self.port = port;
+    }
+    return self;
+}
+
+- (BOOL)bindWithError:(NSError *__autoreleasing *)error
+{
+    
+}
+
+- (BOOL)unbindWithError:(NSError *__autoreleasing *)error
+{
+    
+}
+
+- (void)dealloc
+{
+    if (self.binded)
+        [self unbindWithError:NULL];
+}
+
 @end

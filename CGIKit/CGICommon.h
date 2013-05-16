@@ -78,6 +78,13 @@ static inline void CGIRelease(id obj)
 // Handy functions
 
 #define eprintf(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+
+#if DEBUG
+#define dbgprintf(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+#else
+#define dbgprintf(format, ...)
+#endif
+
 #define CGIAssignPointer(ptr, val) \
 do { typeof(ptr) __ptr = (ptr); \
 if (__ptr) *__ptr = (val); \

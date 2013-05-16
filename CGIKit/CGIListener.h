@@ -10,4 +10,12 @@
 
 @interface CGIListener : NSObject
 
+@property uint16_t port;
+@property (readonly) BOOL binded;
+
+- (id)initWithPort:(uint16_t)port;
+
+- (BOOL)bindWithError:(NSError **)error;
+- (BOOL)unbindWithError:(NSError **)error;
+
 @end

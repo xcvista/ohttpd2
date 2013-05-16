@@ -53,7 +53,7 @@ int main(int argc, const char * argv[])
                 CGIServer *server = [CGIServer server];
                 
                 server.instanceIdentifier = identifier;
-                server.configFilePath = confFile;
+                server.configFilePath = [confFile stringByExpandingTildeInPath];
                 
                 [server start];
                 

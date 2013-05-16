@@ -13,6 +13,7 @@
 - (id)initWithFile:(NSString *)fileName error:(NSError **)error;
 
 - (NSString *)readLine;
+- (NSArray *)shellReadLine;
 - (BOOL)endOfFile;
 
 @end

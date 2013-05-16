@@ -10,4 +10,10 @@
 
 @interface CGIVirtualHost : NSObject
 
+@property NSURL *listenURL;
+@property NSString *documentRoot;
+@property NSArray *indexPages;
+
+- (id)initWithListenURL:(NSURL *)URL;
+
 @end
