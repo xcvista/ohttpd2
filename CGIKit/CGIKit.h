@@ -15,6 +15,8 @@
 
 #import <CGIKit/CGIServer.h>
 #import <CGIKit/CGIHandler.h>
+#import <CGIKit/CGIListener.h>
+#import <CGIKit/CGIVirtualHost.h>
 
 #endif  // __OBJC__
 
