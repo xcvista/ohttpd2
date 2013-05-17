@@ -11,6 +11,8 @@
 
 #ifndef GNUSTEP
 #import <CoreFoundation/CoreFoundation.h>
+#import <sys/socket.h>
+#import <netinet/in.h>
 #endif
 
 @implementation CGIListener

@@ -10,4 +10,9 @@
 
 @interface CGIConnection : NSObject
 
+@property NSInputStream *input;
+@property NSOutputStream *output;
+
+
+
 @end
