@@ -62,6 +62,11 @@ if (__ptr) *__ptr = (val); \
     return [self readUntilCharacter:[[self class] newLine] encoding:NSUTF8StringEncoding]; // This works for both Windows and UNIX.
 }
 
+- (BOOL)endOfFile
+{
+    return ![_inputStream hasBytesAvailable];
+}
+
 - (NSString *)readUntilCharacter:(NSData *)deliminator encoding:(NSStringEncoding)encoding
 {
     NSMutableData *pickedUp = [NSMutableData data];

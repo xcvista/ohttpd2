@@ -8,5 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+#import <CGIStream/NSInputStream+CGIStreamReader.h>
+#import <CGIStream/NSOutputStream+CGIStreamWriter.h>
+
 #import <CGIStream/CGIStreamReader.h>
 #import <CGIStream/CGIStreamWriter.h>
