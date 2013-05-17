@@ -14,9 +14,12 @@
 - (id)initWithFile:(NSString *)fileName error:(NSError **)error;
 
 - (NSInputStream *)inputStream;
-- (NSString *)readUntilCharacter:(char)deliminator encoding:(NSStringEncoding)encoding;
+- (NSString *)readUntilCharacter:(NSData *)deliminator encoding:(NSStringEncoding)encoding;
 - (NSString *)readLine;
 - (NSArray *)shellReadLine;
 - (BOOL)endOfFile;
+
++ (NSData *)newLine;
++ (NSData *)crLf;
 
 @end

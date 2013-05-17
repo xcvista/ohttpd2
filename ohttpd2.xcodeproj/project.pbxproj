@@ -41,8 +41,6 @@
 		1D50B8CE17450D5C00385048 /* CGIListener.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8CC17450D5C00385048 /* CGIListener.m */; };
 		1D50B8D117450D8800385048 /* CGIVirtualHost.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B8CF17450D8800385048 /* CGIVirtualHost.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D50B8D217450D8800385048 /* CGIVirtualHost.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8D017450D8800385048 /* CGIVirtualHost.m */; };
-		1D50B8D517450DC900385048 /* CGILineReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B8D317450DC900385048 /* CGILineReader.h */; };
-		1D50B8D617450DC900385048 /* CGILineReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8D417450DC900385048 /* CGILineReader.m */; };
 		1D50B8D917451C3B00385048 /* CGIConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B8D717451C3B00385048 /* CGIConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D50B8DA17451C3B00385048 /* CGIConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8D817451C3B00385048 /* CGIConnection.m */; };
 		1D50B8E11745342100385048 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D50B8BB1744F96800385048 /* SenTestingKit.framework */; };
@@ -50,9 +48,9 @@
 		1D50B8E81745342200385048 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B8E61745342200385048 /* InfoPlist.strings */; };
 		1D50B8EB1745342200385048 /* CGIKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8EA1745342200385048 /* CGIKitTests.m */; };
 		1D50B8F51745716900385048 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D50B8F41745716900385048 /* CoreFoundation.framework */; };
-		1D50B8F81745BEB200385048 /* CGIHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B8F61745BEB200385048 /* CGIHTTPRequest.h */; };
+		1D50B8F81745BEB200385048 /* CGIHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B8F61745BEB200385048 /* CGIHTTPRequest.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D50B8F91745BEB200385048 /* CGIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8F71745BEB200385048 /* CGIHTTPRequest.m */; };
-		1D50B9511745CC2700385048 /* CGISocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B94F1745CC2600385048 /* CGISocket.h */; };
+		1D50B9511745CC2700385048 /* CGISocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B94F1745CC2600385048 /* CGISocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D50B9521745CC2700385048 /* CGISocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B9501745CC2700385048 /* CGISocket.m */; };
 		1D50B959174667FC00385048 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D50B83D1744E62900385048 /* Cocoa.framework */; };
 		1D50B95F174667FC00385048 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B95D174667FC00385048 /* InfoPlist.strings */; };
@@ -62,6 +60,11 @@
 		1D50B96F1746698200385048 /* CGIStreamWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B96D1746698200385048 /* CGIStreamWriter.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D50B9701746698200385048 /* CGIStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B96E1746698200385048 /* CGIStreamWriter.m */; };
 		1D50B9711746698A00385048 /* CGIStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B961174667FC00385048 /* CGIStream.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1D50B974174681A400385048 /* CGIHTTPResponse.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B972174681A300385048 /* CGIHTTPResponse.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1D50B975174681A400385048 /* CGIHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B973174681A300385048 /* CGIHTTPResponse.m */; };
+		1D50B978174681B400385048 /* CGIHTTPContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B976174681B400385048 /* CGIHTTPContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		1D50B979174681B400385048 /* CGIHTTPContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B977174681B400385048 /* CGIHTTPContext.m */; };
+		1D50B97A1746820800385048 /* CGIStream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D50B958174667FC00385048 /* CGIStream.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,8 +135,6 @@
 		1D50B8CC17450D5C00385048 /* CGIListener.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIListener.m; sourceTree = "<group>"; };
 		1D50B8CF17450D8800385048 /* CGIVirtualHost.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIVirtualHost.h; sourceTree = "<group>"; };
 		1D50B8D017450D8800385048 /* CGIVirtualHost.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIVirtualHost.m; sourceTree = "<group>"; };
-		1D50B8D317450DC900385048 /* CGILineReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGILineReader.h; sourceTree = "<group>"; };
-		1D50B8D417450DC900385048 /* CGILineReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGILineReader.m; sourceTree = "<group>"; };
 		1D50B8D717451C3B00385048 /* CGIConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIConnection.h; sourceTree = "<group>"; };
 		1D50B8D817451C3B00385048 /* CGIConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIConnection.m; sourceTree = "<group>"; };
 		1D50B8E01745342100385048 /* CGIKitTests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CGIKitTests.octest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -154,6 +155,10 @@
 		1D50B96A1746694800385048 /* CGIStreamReader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIStreamReader.m; sourceTree = "<group>"; };
 		1D50B96D1746698200385048 /* CGIStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIStreamWriter.h; sourceTree = "<group>"; };
 		1D50B96E1746698200385048 /* CGIStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIStreamWriter.m; sourceTree = "<group>"; };
+		1D50B972174681A300385048 /* CGIHTTPResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIHTTPResponse.h; sourceTree = "<group>"; };
+		1D50B973174681A300385048 /* CGIHTTPResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIHTTPResponse.m; sourceTree = "<group>"; };
+		1D50B976174681B400385048 /* CGIHTTPContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIHTTPContext.h; sourceTree = "<group>"; };
+		1D50B977174681B400385048 /* CGIHTTPContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIHTTPContext.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -161,6 +166,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D50B97A1746820800385048 /* CGIStream.framework in Frameworks */,
 				1D50B8F51745716900385048 /* CoreFoundation.framework in Frameworks */,
 				1D50B8761744E67900385048 /* Foundation.framework in Frameworks */,
 			);
@@ -297,8 +303,10 @@
 				1D50B8D817451C3B00385048 /* CGIConnection.m */,
 				1D50B8F61745BEB200385048 /* CGIHTTPRequest.h */,
 				1D50B8F71745BEB200385048 /* CGIHTTPRequest.m */,
-				1D50B8D317450DC900385048 /* CGILineReader.h */,
-				1D50B8D417450DC900385048 /* CGILineReader.m */,
+				1D50B972174681A300385048 /* CGIHTTPResponse.h */,
+				1D50B973174681A300385048 /* CGIHTTPResponse.m */,
+				1D50B976174681B400385048 /* CGIHTTPContext.h */,
+				1D50B977174681B400385048 /* CGIHTTPContext.m */,
 				1D50B8441744E62900385048 /* Supporting Files */,
 			);
 			path = CGIKit;
@@ -452,10 +460,11 @@
 				1D50B8A31744EBCC00385048 /* CGIHandler.h in Headers */,
 				1D50B8CD17450D5C00385048 /* CGIListener.h in Headers */,
 				1D50B8D117450D8800385048 /* CGIVirtualHost.h in Headers */,
-				1D50B8D517450DC900385048 /* CGILineReader.h in Headers */,
 				1D50B8D917451C3B00385048 /* CGIConnection.h in Headers */,
 				1D50B8F81745BEB200385048 /* CGIHTTPRequest.h in Headers */,
 				1D50B9511745CC2700385048 /* CGISocket.h in Headers */,
+				1D50B974174681A400385048 /* CGIHTTPResponse.h in Headers */,
+				1D50B978174681B400385048 /* CGIHTTPContext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -732,10 +741,11 @@
 				1D50B8A01744EB5600385048 /* CGIServer.m in Sources */,
 				1D50B8CE17450D5C00385048 /* CGIListener.m in Sources */,
 				1D50B8D217450D8800385048 /* CGIVirtualHost.m in Sources */,
-				1D50B8D617450DC900385048 /* CGILineReader.m in Sources */,
 				1D50B8DA17451C3B00385048 /* CGIConnection.m in Sources */,
 				1D50B8F91745BEB200385048 /* CGIHTTPRequest.m in Sources */,
 				1D50B9521745CC2700385048 /* CGISocket.m in Sources */,
+				1D50B975174681A400385048 /* CGIHTTPResponse.m in Sources */,
+				1D50B979174681B400385048 /* CGIHTTPContext.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,9 +17,9 @@ if (__ptr) *__ptr = (val); \
 @implementation CGIStreamReader
 {
     NSInputStream *_inputStream;
-    char *_buffer;
-    char *_pLast;
-    char *_pCurrent;
+    uint8_t *_buffer;
+    uint8_t *_pLast;
+    uint8_t *_pCurrent;
 }
 
 - (id)initWithFile:(NSString *)fileName error:(NSError *__autoreleasing *)error
@@ -59,16 +59,30 @@ if (__ptr) *__ptr = (val); \
 
 - (NSString *)readLine
 {
-    return [self readUntilCharacter:'\n' encoding:NSUTF8StringEncoding]; // This works for both Windows and UNIX.
+    return [self readUntilCharacter:[[self class] newLine] encoding:NSUTF8StringEncoding]; // This works for both Windows and UNIX.
 }
 
-- (NSString *)readUntilCharacter:(char)deliminator encoding:(NSStringEncoding)encoding
+- (NSString *)readUntilCharacter:(NSData *)deliminator encoding:(NSStringEncoding)encoding
 {
     NSMutableData *pickedUp = [NSMutableData data];
+    BOOL found = NO;
+    BOOL canRead = YES;
     
-    if (_pCurrent >= _pLast)
+    while (!found)
     {
-        // Buffer is drained, fill it.
+        if (_pCurrent + [deliminator length] >= _pLast && canRead)
+        {
+            NSInteger read = [_inputStream read:_pLast maxLength:BUFSIZ - (_pLast - _buffer)];
+            if (read <= 0)
+            {
+                // Error or drained.
+                canRead = NO;
+            }
+            else
+            {
+                _pLast += read;
+            }
+        }
         
     }
 }
@@ -213,6 +227,16 @@ start:
     
 done:
     return [outputBuffer copy];
+}
+
++ (NSData *)newLine
+{
+    return [NSData dataWithBytes:"\n" length:1];
+}
+
++ (NSData *)crLf
+{
+    return [NSData dataWithBytes:"\r\n" length:2];
 }
 
 @end

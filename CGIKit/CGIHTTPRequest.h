@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 muski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <CGIKit/CGICommon.h>
 
 @interface CGIHTTPRequest : NSObject
 
@@ -14,6 +14,7 @@
 @property NSString *method;
 @property NSString *requestPath;
 @property NSString *protocolVersion;
+@property NSData *requestBody;
 
 - (NSDictionary *)query;
 - (NSDictionary *)form;

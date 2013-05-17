@@ -12,7 +12,10 @@
 
 @property NSInputStream *input;
 @property NSOutputStream *output;
+@property dispatch_queue_t dispatchQueue; // DO not use dispatch_get_main_queue!
+@property NSDictionary *connectionInfo;
 
-
+- (id)initWithInputStream:(NSInputStream *)inputStream outputStream:(NSOutputStream *)outputStream;
+- (void)run;
 
 @end

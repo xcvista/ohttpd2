@@ -9,7 +9,7 @@
 #import "CGIServer.h"
 #import "CGIListener.h"
 #import "CGIVirtualHost.h"
-#import "CGILineReader.h"
+#import <CGIStream/CGIStream.h>
 
 NSString *CGIServerReloadNotification = @"info.maxchan.ohttpd.reload";
 NSString *CGIServerStopNotification = @"info.maxchan.ohttpd.stop";
@@ -88,8 +88,8 @@ CGIServer *__thisServer;
     NSMutableArray *vhosts = [NSMutableArray array];
     
     NSError *err = nil;
-    CGILineReader *lr = [[CGILineReader alloc] initWithFile:self.configFilePath
-                                                      error:&err];
+    CGIStreamReader *lr = [[CGIStreamReader alloc] initWithFile:self.configFilePath
+                                                          error:&err];
     if (!lr)
     {
         eprintf("ohttpd: error: cannot open configure file: %s\n", CGICSTR(self.configFilePath));
