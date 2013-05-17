@@ -25,9 +25,9 @@
 
 #endif  // __cplusplus
 
-// C-safe Objective-C code.
-
 CGIBeginDecls
+
+// C-safe Objective-C code.
 
 #ifdef     __OBJC__
 

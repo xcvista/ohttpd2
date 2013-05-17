@@ -21,6 +21,7 @@ CGIServer *__thisServer;
 @property BOOL running;
 @property NSMutableArray *listeners;
 @property NSMutableArray *vhosts;
+@property NSMutableDictionary *handlers;
 
 @end
 
@@ -153,9 +154,76 @@ CGIServer *__thisServer;
             }
             case 1:
             {
-                
+                CGIVirtualHost *vh = cache;
+                if ([line isEqualToArray:@[@"End", @"Server"]])
+                {
+                    // End Server line
+                    dbgprintf("ohttpd: info: added server at %s\n", CGICSTR([vh.listenURL absoluteString]));
+                    [vhosts addObject:vh];
+                    cache = nil;
+                    status = 0;
+                }
+                else if ([line[0] isEqualToString:@"Index"])
+                {
+                    if ([line count] < 2)
+                    {
+                        eprintf("ohttpd: error: cannot parse config file: need port number after Index\n");
+                        continue;
+                    }
+                    vh.indexPages = [[line subarrayWithRange:NSMakeRange(1, [line count] - 1)] arrayByAddingObjectsFromArray:vh.indexPages];
+                }
+                else if ([line[0] isEqualToString:@"DocumentRoot"])
+                {
+                    if ([line count] < 2)
+                    {
+                        eprintf("ohttpd: error: cannot parse config file: need port number after DocumentRoot\n");
+                        continue;
+                    }
+                    vh.documentRoot = [line[1] stringByExpandingTildeInPath];
+                }
             }
         }
+    }
+    
+    if (!([listeners count] || [vhosts count]))
+    {
+        eprintf("ohttpd: error: No server or listening port found in config file.\n");
+        if (!([self.vhosts count] && [self.listeners count]))
+            exit(1);
+    }
+    
+    if ([self.listeners count])
+    {
+        for (CGIListener *listener in self.listeners)
+        {
+            err = nil;
+            if (![listener unbindWithError:&err])
+            {
+                eprintf("ohttpd: error: failed to unbind from port %u: %s\n", listener.port, CGICSTR([err description]));
+            }
+        }
+    }
+    
+    [self.listeners removeAllObjects];
+    [self.vhosts setArray:vhosts];
+    
+    for (CGIListener *listener in listeners)
+    {
+        err = nil;
+        if ([listener bindWithError:&err])
+        {
+            [self.listeners addObject:listener];
+        }
+        else
+        {
+            eprintf("ohttpd: error: failed to bind to port %u: %s\n", listener.port, CGICSTR([err description]));
+        }
+    }
+    
+    if (!([self.vhosts count] && [self.listeners count]))
+    {
+        eprintf("ohttpd: error: no successful server or port.\n");
+        exit(1);
     }
     
     // Resume messages

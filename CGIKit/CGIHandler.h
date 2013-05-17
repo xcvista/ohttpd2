@@ -15,5 +15,6 @@
 @required
 - (BOOL)canReuse;
 - (void)handle:(CGIHTTPContext *)context;
++ (instancetype)handler;
 
 @end

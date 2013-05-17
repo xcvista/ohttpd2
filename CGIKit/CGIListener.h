@@ -6,7 +6,7 @@
 //  Copyright (c) 2013年 muski. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <CGIKit/CGICommon.h>
 
 @interface CGIListener : NSObject
 

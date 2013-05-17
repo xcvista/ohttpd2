@@ -16,4 +16,6 @@
 
 - (id)initWithListenURL:(NSURL *)URL;
 
+- (NSString *)mapPath:(NSString *)path;
+
 @end

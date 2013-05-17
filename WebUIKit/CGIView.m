@@ -10,4 +10,9 @@
 
 @implementation CGIView
 
+- (NSString *)HTMLMarkup
+{
+    return CGISTR(@"<div id=\"%@\">%@</div>", self.text, self.identifier);
+}
+
 @end

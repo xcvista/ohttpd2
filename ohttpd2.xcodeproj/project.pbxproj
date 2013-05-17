@@ -49,6 +49,9 @@
 		1D50B8E21745342100385048 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D50B83D1744E62900385048 /* Cocoa.framework */; };
 		1D50B8E81745342200385048 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B8E61745342200385048 /* InfoPlist.strings */; };
 		1D50B8EB1745342200385048 /* CGIKitTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8EA1745342200385048 /* CGIKitTests.m */; };
+		1D50B8F51745716900385048 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D50B8F41745716900385048 /* CoreFoundation.framework */; };
+		1D50B8F81745BEB200385048 /* CGIHTTPRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D50B8F61745BEB200385048 /* CGIHTTPRequest.h */; };
+		1D50B8F91745BEB200385048 /* CGIHTTPRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B8F71745BEB200385048 /* CGIHTTPRequest.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,6 +130,9 @@
 		1D50B8E51745342100385048 /* CGIKitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CGIKitTests-Info.plist"; sourceTree = "<group>"; };
 		1D50B8E71745342200385048 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1D50B8EA1745342200385048 /* CGIKitTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CGIKitTests.m; sourceTree = "<group>"; };
+		1D50B8F41745716900385048 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/System/Library/Frameworks/CoreFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		1D50B8F61745BEB200385048 /* CGIHTTPRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIHTTPRequest.h; sourceTree = "<group>"; };
+		1D50B8F71745BEB200385048 /* CGIHTTPRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIHTTPRequest.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -134,6 +140,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1D50B8F51745716900385048 /* CoreFoundation.framework in Frameworks */,
 				1D50B8761744E67900385048 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -221,6 +228,7 @@
 			isa = PBXGroup;
 			children = (
 				1D50B82E1744C9F300385048 /* libresolv.dylib */,
+				1D50B8F41745716900385048 /* CoreFoundation.framework */,
 				1D50B82C1744C9E200385048 /* Foundation.framework */,
 				1D50B83D1744E62900385048 /* Cocoa.framework */,
 				1D50B8BB1744F96800385048 /* SenTestingKit.framework */,
@@ -247,15 +255,17 @@
 				1D50B87F1744E8B900385048 /* CGICommon.m */,
 				1D50B89D1744EB5600385048 /* CGIServer.h */,
 				1D50B89E1744EB5600385048 /* CGIServer.m */,
+				1D50B8A11744EBCC00385048 /* CGIHandler.h */,
 				1D50B8CB17450D5C00385048 /* CGIListener.h */,
 				1D50B8CC17450D5C00385048 /* CGIListener.m */,
 				1D50B8CF17450D8800385048 /* CGIVirtualHost.h */,
 				1D50B8D017450D8800385048 /* CGIVirtualHost.m */,
 				1D50B8D717451C3B00385048 /* CGIConnection.h */,
 				1D50B8D817451C3B00385048 /* CGIConnection.m */,
+				1D50B8F61745BEB200385048 /* CGIHTTPRequest.h */,
+				1D50B8F71745BEB200385048 /* CGIHTTPRequest.m */,
 				1D50B8D317450DC900385048 /* CGILineReader.h */,
 				1D50B8D417450DC900385048 /* CGILineReader.m */,
-				1D50B8A11744EBCC00385048 /* CGIHandler.h */,
 				1D50B8441744E62900385048 /* Supporting Files */,
 			);
 			path = CGIKit;
@@ -388,6 +398,7 @@
 				1D50B8D117450D8800385048 /* CGIVirtualHost.h in Headers */,
 				1D50B8D517450DC900385048 /* CGILineReader.h in Headers */,
 				1D50B8D917451C3B00385048 /* CGIConnection.h in Headers */,
+				1D50B8F81745BEB200385048 /* CGIHTTPRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,6 +639,7 @@
 				1D50B8D217450D8800385048 /* CGIVirtualHost.m in Sources */,
 				1D50B8D617450DC900385048 /* CGILineReader.m in Sources */,
 				1D50B8DA17451C3B00385048 /* CGIConnection.m in Sources */,
+				1D50B8F91745BEB200385048 /* CGIHTTPRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
