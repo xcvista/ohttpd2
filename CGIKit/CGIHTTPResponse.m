@@ -60,25 +60,44 @@ if (__from) to = __from; \
     return response;
 }
 
-+ (instancetype)HTTP403Response
++ (instancetype)HTTP403ResponseWithFile:(NSString *)file
 {
     CGIHTTPResponse *response = [[self alloc] init];
     response.statusCode = 403;
     response.protocolVersion = @"HTTP/1.0";
     response.allHeaderFields[@"Content-Type"] = @"text/html; charset=utf-8";
     response.allHeaderFields[@"Connection"] = @"close";
-    response.responseBody = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"403" ofType:@"html"]];
+    
+    NSString *format = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"403"
+                                                                                                           ofType:@"html"]
+                                                 encoding:NSUTF8StringEncoding
+                                                    error:NULL];
+    
+    
+    response.responseBody = [CGISTR(format, file) dataUsingEncoding:NSUTF8StringEncoding];
     return response;
 }
 
-+ (instancetype)HTTP500Response
++ (instancetype)HTTP500ResponseWithException:(NSException *)exception
 {
     CGIHTTPResponse *response = [[self alloc] init];
     response.statusCode = 500;
     response.protocolVersion = @"HTTP/1.0";
     response.allHeaderFields[@"Content-Type"] = @"text/html; charset=utf-8";
     response.allHeaderFields[@"Connection"] = @"close";
-    response.responseBody = [NSData dataWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"500" ofType:@"html"]];
+    NSString *format = [NSString stringWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"500ex"
+                                                                                                           ofType:@"html"]
+                                                 encoding:NSUTF8StringEncoding
+                                                    error:NULL];
+    NSMutableString *stack = [NSMutableString string];
+    
+    for (NSUInteger i = 0; i < [[exception callStackSymbols] count]; i++)
+    {
+        [stack appendFormat:@"%@\n", [exception callStackSymbols][i]];
+    }
+    
+    response.responseBody = [CGISTR(format, NSStringFromClass([exception class]), [exception name], [exception reason], stack) dataUsingEncoding:NSUTF8StringEncoding];
+    
     return response;
 }
 

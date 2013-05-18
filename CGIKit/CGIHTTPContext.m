@@ -25,4 +25,11 @@
     return self;
 }
 
+- (BOOL)matchForVirtualHost
+{
+    CGIServer *server = [CGIServer server];
+    
+    return NO;
+}
+
 @end

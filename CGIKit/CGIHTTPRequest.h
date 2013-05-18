@@ -13,8 +13,10 @@
 @property NSMutableDictionary *allHeaderFields;
 @property NSString *method;
 @property NSString *requestPath;
+@property NSString *requestFile;
 @property NSString *protocolVersion;
 @property NSData *requestBody;
+@property BOOL SSL;
 
 - (NSDictionary *)query;
 - (NSDictionary *)form;

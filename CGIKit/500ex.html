@@ -3,10 +3,21 @@
     <head>
         <meta charset="utf-8" />
         <title>HTTP 500 Internal Server Error</title>
+        <style type="text/css">
+            body
+            {
+                font-family: Times, 'Times New Roman', serif;
+            }
+        </style>
     </head>
     <body>
         <h1>HTTP 500 Internal Server Error</h1>
         <p>A server module crashed while processing your request. Please notify site manager and/or technician and retry later.</p>
+        <h2>Technical details</h2>
+        <h3>Exception: %@</h3>
+        <p><span style="font-weight: bold">%@:</span> %@</p>
+        <h3>Call stack</h3>
+        <pre>%@</pre>
         <hr />
         <address>ohttpd/2.0, an open-source HTTP server written in Objective-C.</address>
     </body>

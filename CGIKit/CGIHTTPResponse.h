@@ -25,7 +25,7 @@
 
 + (instancetype)HTTP100Response;
 + (instancetype)HTTP400Response;
-+ (instancetype)HTTP403Response;
-+ (instancetype)HTTP500Response;
++ (instancetype)HTTP403ResponseWithFile:(NSString *)file;
++ (instancetype)HTTP500ResponseWithException:(NSException *)exception;
 
 @end

@@ -29,7 +29,7 @@ enum CGIConnectionStatus : long
 
 @property CGIHTTPRequest *request;
 @property CGIHTTPResponse *response;
-@property CGIHTTPContext *contenxt;
+@property CGIHTTPContext *context;
 @property enum CGIConnectionStatus status;
 @property NSDate *keepAliveUntil;
 @property dispatch_source_t timer;
@@ -99,6 +99,9 @@ enum CGIConnectionStatus : long
                 if (![scanner scanUpToCharactersFromSet:[NSCharacterSet whitespaceCharacterSet] intoString:&buf])
                     break;
                 request.protocolVersion = buf;
+                
+                if ([self.socket isSecure])
+                    self.request.SSL = YES;
                 
                 self.request = request;
                 
@@ -192,12 +195,25 @@ enum CGIConnectionStatus : long
 {
     @try
     {
-        self.contenxt = [[CGIHTTPContext alloc] initWithHTTPRequest:self.request queue:self.dispatchQueue];
+        self.context = [[CGIHTTPContext alloc] initWithHTTPRequest:self.request queue:self.dispatchQueue];
+        if (![self.context matchForVirtualHost])
+        {
+            self.status = writing;
+            self.response = [CGIHTTPResponse HTTP403ResponseWithFile:CGISTR(@"%@://%@%@", self.request.SSL ? @"https" : @"http",
+                                                                            self.request.allHeaderFields[@"Host"],
+                                                                            self.request.requestPath)];
+            [self sendResponse];
+            return;
+        }
+        [self.context process];
+        self.response = self.context.response;
+        self.status = writing;
+        [self sendResponse];
     }
     @catch (NSException *exception)
     {
         self.status = writing;
-        self.response = [CGIHTTPResponse HTTP500Response];
+        self.response = [CGIHTTPResponse HTTP500ResponseWithException:exception];
         [self sendResponse];
     }
 }
