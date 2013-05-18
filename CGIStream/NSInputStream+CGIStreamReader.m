@@ -20,6 +20,8 @@
     
     while ([outputData length] < length)
     {
+        memset(buffer, 0, length);
+        
         NSInteger got = [self read:buffer maxLength:length - [outputData length]];
         if (got < 0)
         {
@@ -31,9 +33,10 @@
         }
         else
         {
-            
+            [outputData appendBytes:buffer length:got];
         }
     }
+    return [outputData copy];
 }
 
 @end

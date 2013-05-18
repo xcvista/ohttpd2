@@ -8,14 +8,19 @@
 
 #import <CGIKit/CGICommon.h>
 
+@class CGIConnection;
+
 @interface CGIListener : NSObject
 
 @property uint16_t port;
 @property (readonly) BOOL binded;
+@property NSMutableArray *connections;
 
 - (id)initWithPort:(uint16_t)port;
 
 - (BOOL)bindWithError:(NSError **)error;
 - (BOOL)unbindWithError:(NSError **)error;
+
+- (void)connectionDidFinish:(CGIConnection *)connection;
 
 @end

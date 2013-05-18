@@ -10,4 +10,13 @@
 
 @implementation CGIHTTPRequest
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.allHeaderFields = [NSMutableDictionary dictionary];
+    }
+    return self;
+}
+
 @end

@@ -8,23 +8,32 @@
 
 #import "CGIListener.h"
 #import "CGIServer.h"
+#import "CGIConnection.h"
 
 #ifndef GNUSTEP
-#import <CoreFoundation/CoreFoundation.h>
-#import <sys/socket.h>
-#import <netinet/in.h>
-#endif
+
+// OS X
+
+#import <GCDAsyncSocket/GCDAsyncSocket.h>
+
+@interface CGIListener () <GCDAsyncSocketDelegate>
+
+@property GCDAsyncSocket *socket;
+
+@end
 
 @implementation CGIListener
-{
-    NSMutableArray *listeningSockets;
-}
 
 - (id)initWithPort:(uint16_t)port
 {
     if (self = [super init])
     {
         self.port = port;
+        
+        self.socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
+        
+        self.connections = [NSMutableArray array];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(__unbindWithNotification:)
                                                      name:CGIServerWillStopNotification
@@ -35,35 +44,53 @@
 
 - (BOOL)bindWithError:(NSError *__autoreleasing *)error
 {
-#ifdef GNUSTEP
-    
-#else
-    
-#endif
+    return [self.socket acceptOnPort:self.port error:error];
 }
 
 - (BOOL)unbindWithError:(NSError *__autoreleasing *)error
 {
-#ifdef GNUSTEP
-    
-#else
-    
-#endif
+    [self.socket disconnectAfterReadingAndWriting];
+    return YES;
 }
 
 - (void)__unbindWithNotification:(NSNotification *)aNotification
 {
-    NSError *err = nil;
-    if (![self unbindWithError:&err])
+    [self.socket disconnect];
+    
+    for (NSInteger i = [self.connections count] - 1; i > 0; i--)
     {
-        eprintf("ohttpd: error: cannot unbind from port %u: %s", self.port, CGICSTR([err description]));
+        CGIConnection *conn = self.connections[i];
+        [conn stop];
     }
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket
+{
+    CGIConnection *connection = [[CGIConnection alloc] initWithSocket:newSocket listener:self];
+    if (!connection)
+    {
+        eprintf("ohttpd: error: dropped connection.");
+        [newSocket disconnect];
+    }
+    [self.connections addObject:connection];
+    [connection run];
 }
 
 - (void)dealloc
 {
     if (self.binded)
-        [self unbindWithError:NULL];
+        [self __unbindWithNotification:nil];
+}
+
+- (void)connectionDidFinish:(CGIConnection *)connection
+{
+    [self.connections removeObject:connection];
 }
 
 @end
+
+#else
+
+// GNUstep
+
+#endif

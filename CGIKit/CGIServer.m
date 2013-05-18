@@ -44,6 +44,17 @@ CGIServer *__thisServer;
     [self stop];
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.handlers = [NSMutableDictionary dictionary];
+        self.vhosts = [NSMutableArray array];
+        self.listeners = [NSMutableArray array];
+    }
+    return self;
+}
+
 - (void)start
 {
     
@@ -88,8 +99,8 @@ CGIServer *__thisServer;
     NSMutableArray *vhosts = [NSMutableArray array];
     
     NSError *err = nil;
-    CGIStreamReader *lr = [[CGIStreamReader alloc] initWithFile:self.configFilePath
-                                                          error:&err];
+    CGIFileStreamReader *lr = [[CGIFileStreamReader alloc] initWithFile:self.configFilePath
+                                                                  error:&err];
     if (!lr)
     {
         eprintf("ohttpd: error: cannot open configure file: %s\n", CGICSTR(self.configFilePath));

@@ -18,5 +18,9 @@
 
 - (NSDictionary *)query;
 - (NSDictionary *)form;
+- (NSDictionary *)acceptMIME;
+- (NSDictionary *)acceptLanguage;
+- (NSDictionary *)acceptStringEncoding;
+- (NSDictionary *)cookie;
 
 @end

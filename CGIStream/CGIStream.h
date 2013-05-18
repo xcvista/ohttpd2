@@ -12,4 +12,5 @@
 #import <CGIStream/NSOutputStream+CGIStreamWriter.h>
 
 #import <CGIStream/CGIStreamReader.h>
+#import <CGIStream/CGIFileStreamReader.h>
 #import <CGIStream/CGIStreamWriter.h>
