@@ -89,34 +89,30 @@ CGIServer *__thisServer;
     exit(0);
 }
 
-- (void)reload
+- (void)loadConfigFile:(NSString *)fileName lis:(NSMutableArray *)listeners vh:(NSMutableArray *)vhosts
 {
-    // Suspend messages
-    NSDistributedNotificationCenter *dnc = [NSDistributedNotificationCenter defaultCenter];
-    [dnc setSuspended:YES];
-    
-    NSMutableArray *listeners = [NSMutableArray array];
-    NSMutableArray *vhosts = [NSMutableArray array];
-    
     NSError *err = nil;
-    CGIFileStreamReader *lr = [[CGIFileStreamReader alloc] initWithFile:self.configFilePath
+    fileName = (fileName == self.configFilePath) ? [fileName stringByExpandingTildeInPath] : [[self.configFilePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
+    CGIFileStreamReader *lr = [[CGIFileStreamReader alloc] initWithFile:fileName
                                                                   error:&err];
     if (!lr)
     {
-        eprintf("ohttpd: error: cannot open configure file: %s\n", CGICSTR(self.configFilePath));
+        eprintf("ohttpd: error: cannot open configure file: %s\n", CGICSTR(fileName));
         exit(1);
     }
     
-    dbgprintf("ohttpd: info: opened configure file: %s\n", CGICSTR(self.configFilePath));
+    dbgprintf("ohttpd: info: opened configure file: %s\n", CGICSTR(fileName));
     
     NSUInteger status = 0; // 0 = outside
                            // 1 = Server block
     
     id cache = nil;
+    NSUInteger lineno = 0;
     
     while (![lr endOfFile])
     {
         NSArray *line = [lr shellReadLine];
+        lineno++;
         
         if (![line count])
             continue;
@@ -130,38 +126,56 @@ CGIServer *__thisServer;
                     // Listener
                     if ([line count] < 2)
                     {
-                        eprintf("ohttpd: error: cannot parse config file: need port number after Listen\n");
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need port number after Listen\n", CGICSTR([fileName lastPathComponent]), lineno);
                         continue;
                     }
                     
                     int port = [line[1] intValue];
                     if (port <= (getuid()) ? 1024 : 0 || port > 65535)
                     {
-                        eprintf("ohttpd: error: invalid port number for you: %d\n", port);
+                        eprintf("ohttpd: error: %s:%lu invalid port number for you: %d\n", CGICSTR([fileName lastPathComponent]), lineno, port);
                         continue;
                     }
                     
                     [listeners addObject:[[CGIListener alloc] initWithPort:port]];
                     dbgprintf("ohttpd: info: added listener at port %d\n", port);
                 }
+                else if ([line[0] isEqualToString:@"Include"])
+                {
+                    // Include
+                    if ([line count] < 2)
+                    {
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need file after Include\n", CGICSTR([fileName lastPathComponent]), lineno);
+                        continue;
+                    }
+                    
+                    [self loadConfigFile:line[1] lis:listeners vh:vhosts];
+                }
                 else if ([line[0] isEqualToString:@"Server"])
                 {
                     // Virtual Host
                     if ([line count] < 2)
                     {
-                        eprintf("ohttpd: error: cannot parse config file: need port number after Server\n");
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need address after Server\n", CGICSTR([fileName lastPathComponent]), lineno);
                         continue;
                     }
                     
                     NSURL *listenURL = [NSURL URLWithString:line[1]];
                     if (!listenURL)
                     {
-                        eprintf("ohttpd: error: invalid server listen url: %s\n", CGICSTR(line[1]));
+                        eprintf("ohttpd: error: %s:%lu invalid server listen url: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[1]));
                         continue;
                     }
                     
+                    status = 1;
                     cache = [[CGIVirtualHost alloc] initWithListenURL:listenURL];
                 }
+                else
+                {
+                    eprintf("ohttpd: error: %s:%lu unrecognized directive: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[0]));
+                    continue;
+                }
+                break;
             }
             case 1:
             {
@@ -178,7 +192,7 @@ CGIServer *__thisServer;
                 {
                     if ([line count] < 2)
                     {
-                        eprintf("ohttpd: error: cannot parse config file: need port number after Index\n");
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need port number after Index\n", CGICSTR([fileName lastPathComponent]), lineno);
                         continue;
                     }
                     vh.indexPages = [[line subarrayWithRange:NSMakeRange(1, [line count] - 1)] arrayByAddingObjectsFromArray:vh.indexPages];
@@ -187,14 +201,33 @@ CGIServer *__thisServer;
                 {
                     if ([line count] < 2)
                     {
-                        eprintf("ohttpd: error: cannot parse config file: need port number after DocumentRoot\n");
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need port number after DocumentRoot\n", CGICSTR([fileName lastPathComponent]), lineno);
                         continue;
                     }
                     vh.documentRoot = [line[1] stringByExpandingTildeInPath];
                 }
+                else
+                {
+                    eprintf("ohttpd: error: %s:%lu unrecognized directive: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[0]));
+                    continue;
+                }
+                break;
             }
         }
     }
+}
+
+- (void)reload
+{
+    // Suspend messages
+    NSDistributedNotificationCenter *dnc = [NSDistributedNotificationCenter defaultCenter];
+    [dnc setSuspended:YES];
+    
+    NSMutableArray *listeners = [NSMutableArray array];
+    NSMutableArray *vhosts = [NSMutableArray array];
+    
+    NSError *err = nil;
+    [self loadConfigFile:self.configFilePath lis:listeners vh:vhosts];
     
     if (!([listeners count] || [vhosts count]))
     {

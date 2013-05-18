@@ -18,3 +18,10 @@
 + (instancetype)handler;
 
 @end
+
+@protocol CGIModule <CGIHandler>
+
+@required
+- (BOOL)processConfigure:(NSArray *)line;
+
+@end

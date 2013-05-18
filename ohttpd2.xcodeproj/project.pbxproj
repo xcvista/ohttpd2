@@ -81,6 +81,8 @@
 		1D50B9A81746CB2100385048 /* CGIHTTPStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D50B9A61746CB2100385048 /* CGIHTTPStatus.m */; };
 		1D50B9AA17475F4B00385048 /* 500ex.html in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9A917475F4B00385048 /* 500ex.html */; };
 		1D50B9AC17476D4900385048 /* 403.html in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9AB17476D4900385048 /* 403.html */; };
+		1D50B9AE17478A2300385048 /* static.conf in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9AD17478A2300385048 /* static.conf */; };
+		1D50B9B017478A5D00385048 /* WebUIKit.conf in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9AF17478A5C00385048 /* WebUIKit.conf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -191,6 +193,8 @@
 		1D50B9A61746CB2100385048 /* CGIHTTPStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIHTTPStatus.m; sourceTree = "<group>"; };
 		1D50B9A917475F4B00385048 /* 500ex.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = 500ex.html; sourceTree = "<group>"; };
 		1D50B9AB17476D4900385048 /* 403.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = 403.html; sourceTree = "<group>"; };
+		1D50B9AD17478A2300385048 /* static.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = static.conf; sourceTree = "<group>"; };
+		1D50B9AF17478A5C00385048 /* WebUIKit.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebUIKit.conf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -434,6 +438,8 @@
 			children = (
 				1D50B8B21744F2D100385048 /* index.wib */,
 				1D50B8B31744F45700385048 /* ibconfig.conf */,
+				1D50B9AD17478A2300385048 /* static.conf */,
+				1D50B9AF17478A5C00385048 /* WebUIKit.conf */,
 			);
 			path = "WebUIKit Pages";
 			sourceTree = "<group>";
@@ -762,6 +768,8 @@
 				1D50B9A41746B7C400385048 /* 400.html in Resources */,
 				1D50B9AA17475F4B00385048 /* 500ex.html in Resources */,
 				1D50B9AC17476D4900385048 /* 403.html in Resources */,
+				1D50B9AE17478A2300385048 /* static.conf in Resources */,
+				1D50B9B017478A5D00385048 /* WebUIKit.conf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
