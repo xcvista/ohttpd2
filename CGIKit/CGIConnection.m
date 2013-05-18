@@ -10,6 +10,7 @@
 #import "CGIListener.h"
 #import "CGIHTTPRequest.h"
 #import "CGIHTTPResponse.h"
+#import "CGIHTTPContext.h"
 #import "CGIHTTPStatus.h"
 
 #ifndef GNUSTEP
@@ -28,8 +29,10 @@ enum CGIConnectionStatus : long
 
 @property CGIHTTPRequest *request;
 @property CGIHTTPResponse *response;
+@property CGIHTTPContext *contenxt;
 @property enum CGIConnectionStatus status;
 @property NSDate *keepAliveUntil;
+@property dispatch_source_t timer;
 
 @end
 
@@ -64,12 +67,15 @@ enum CGIConnectionStatus : long
                   self.socket.connectedPort,
                   [data length]);
     
+    [self stopTimer];
+    
     switch (self.status)
     {
         case readingRequestInit:
         {
             do
             {
+                self.request = nil;
                 CGIHTTPRequest *request = [[CGIHTTPRequest alloc] init];
                 
                 line = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -95,7 +101,7 @@ enum CGIConnectionStatus : long
                 request.protocolVersion = buf;
                 
                 self.request = request;
-                [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
+                
             } while (0);
             
             if (!self.request)
@@ -103,6 +109,11 @@ enum CGIConnectionStatus : long
                 self.status = writing;
                 self.response = [CGIHTTPResponse HTTP400Response];
                 [self sendResponse];
+            }
+            else
+            {
+                self.status = readingRequestHeader;
+                [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
             }
             
             break;
@@ -125,10 +136,19 @@ enum CGIConnectionStatus : long
                     
                     if ([self.request.allHeaderFields[@"Content-Length"] integerValue] > 0)
                     {
-                        self.status = readingRequestBody;
-                        [self.socket readDataToLength:[self.request.allHeaderFields[@"Content-Length"] integerValue]
-                                          withTimeout:-1
-                                                  tag:self.status];
+                        if ([self.request.allHeaderFields[@"Expect"] isEqualToString:@"100-continue"])
+                        {
+                            self.response = [CGIHTTPResponse HTTP100Response];
+                            self.status = writing;
+                            [self sendResponse];
+                        }
+                        else
+                        {
+                            self.status = readingRequestBody;
+                            [self.socket readDataToLength:[self.request.allHeaderFields[@"Content-Length"] integerValue]
+                                              withTimeout:-1
+                                                      tag:self.status];
+                        }
                     }
                     else
                     {
@@ -148,7 +168,7 @@ enum CGIConnectionStatus : long
                 NSString *value = [[line substringFromIndex:NSMaxRange(colon)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 
                 self.request.allHeaderFields[key] = value;
-                [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
+                
             } while (0);
             
             if (!self.request)
@@ -156,6 +176,11 @@ enum CGIConnectionStatus : long
                 self.status = writing;
                 self.response = [CGIHTTPResponse HTTP400Response];
                 [self sendResponse];
+            }
+            else
+            {
+                self.status = readingRequestHeader;
+                [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
             }
         }
         default:
@@ -167,7 +192,7 @@ enum CGIConnectionStatus : long
 {
     @try
     {
-        ;
+        self.contenxt = [[CGIHTTPContext alloc] initWithHTTPRequest:self.request queue:self.dispatchQueue];
     }
     @catch (NSException *exception)
     {
@@ -175,6 +200,15 @@ enum CGIConnectionStatus : long
         self.response = [CGIHTTPResponse HTTP500Response];
         [self sendResponse];
     }
+}
+
+- (void)stopTimer
+{
+    if (!self.timer)
+        return;
+    
+    dispatch_source_cancel(self.timer);
+    self.timer = nil;
 }
 
 - (void)sendResponse
@@ -201,12 +235,35 @@ enum CGIConnectionStatus : long
     
     [self.socket writeData:responseData withTimeout:-1 tag:self.status];
     
-    if (![self.response.allHeaderFields[@"Connection"] isEqualToString:@"keep-alive"])
+    if (self.response.statusCode == 100)
+    {
+        self.status = readingRequestBody;
+        [self.socket readDataToLength:[self.request.allHeaderFields[@"Content-Length"] integerValue]
+                          withTimeout:-1
+                                  tag:self.status];
+    }
+    else if (![self.response.allHeaderFields[@"Connection"] isEqualToString:@"keep-alive"])
     {
         [self.socket disconnectAfterWriting];
     }
     else
     {
+        self.timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, self.dispatchQueue);
+        dispatch_source_set_event_handler(self.timer,
+                                          ^{
+                                              [self stopTimer];
+                                              [self.socket disconnectAfterWriting];
+                                          });
+        NSTimeInterval holdTime = 0;
+        if ([self.request.allHeaderFields[@"Keep-Alive"] length])
+        {
+            holdTime = [self.request.allHeaderFields[@"Keep-Alive"] doubleValue];
+        }
+        if (holdTime <= 0)
+            holdTime = 15;
+        
+        dispatch_source_set_timer(self.timer, DISPATCH_TIME_NOW, holdTime * 1000000000, 0);
+        
         self.status = readingRequestInit;
         [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
     }

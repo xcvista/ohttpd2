@@ -23,7 +23,9 @@
 - (void)redirect:(NSString *)target;
 - (void)proxy:(NSString *)target;
 
++ (instancetype)HTTP100Response;
 + (instancetype)HTTP400Response;
++ (instancetype)HTTP403Response;
 + (instancetype)HTTP500Response;
 
 @end

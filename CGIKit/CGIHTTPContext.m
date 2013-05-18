@@ -7,7 +7,22 @@
 //
 
 #import "CGIHTTPContext.h"
+#import "CGIHTTPRequest.h"
+#import "CGIHTTPResponse.h"
+#import "CGIServer.h"
+#import "CGIVirtualHost.h"
 
 @implementation CGIHTTPContext
+
+- (id)initWithHTTPRequest:(CGIHTTPRequest *)request queue:(dispatch_queue_t)queue
+{
+    if (self = [super init])
+    {
+        self.request = request;
+        self.response = [[CGIHTTPResponse alloc] initWithRequest:self.request];
+        self.mainQueue = queue;
+    }
+    return self;
+}
 
 @end
