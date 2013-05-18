@@ -95,9 +95,10 @@ enum CGIConnectionStatus : long
                 request.protocolVersion = buf;
                 
                 self.request = request;
+                [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
             } while (0);
             
-            if (!self.response)
+            if (!self.request)
             {
                 self.status = writing;
                 self.response = [CGIHTTPResponse HTTP400Response];
@@ -137,7 +138,17 @@ enum CGIConnectionStatus : long
                 }
                 
                 NSRange colon = [line rangeOfString:@":"];
-                if ()
+                if (colon.location == NSNotFound)
+                {
+                    self.response = nil;
+                    break;
+                }
+                
+                NSString *key = [[line substringToIndex:colon.location] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                NSString *value = [[line substringFromIndex:NSMaxRange(colon)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+                
+                self.request.allHeaderFields[key] = value;
+                [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];
             } while (0);
             
             if (!self.request)
@@ -154,7 +165,16 @@ enum CGIConnectionStatus : long
 
 - (void)processRequest
 {
-    
+    @try
+    {
+        ;
+    }
+    @catch (NSException *exception)
+    {
+        self.status = writing;
+        self.response = [CGIHTTPResponse HTTP500Response];
+        [self sendResponse];
+    }
 }
 
 - (void)sendResponse

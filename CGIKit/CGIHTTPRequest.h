@@ -10,7 +10,7 @@
 
 @interface CGIHTTPRequest : NSObject
 
-@property NSDictionary *allHeaderFields;
+@property NSMutableDictionary *allHeaderFields;
 @property NSString *method;
 @property NSString *requestPath;
 @property NSString *protocolVersion;
