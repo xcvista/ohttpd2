@@ -12,6 +12,7 @@
 #import "CGIHTTPResponse.h"
 #import "CGIHTTPContext.h"
 #import "CGIHTTPStatus.h"
+#import "CGIVirtualHost.h"
 
 #ifndef GNUSTEP
 
@@ -170,7 +171,20 @@ enum CGIConnectionStatus : long
                 NSString *key = [[line substringToIndex:colon.location] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 NSString *value = [[line substringFromIndex:NSMaxRange(colon)] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
                 
-                self.request.allHeaderFields[key] = value;
+                id current = self.request.allHeaderFields[key];
+                if (current)
+                {
+                    if ([current isKindOfClass:[NSArray class]])
+                    {
+                        self.request.allHeaderFields[key] = [current arrayByAddingObject:value];
+                    }
+                    else
+                    {
+                        self.request.allHeaderFields[key] = @[current, value];
+                    }
+                }
+                else
+                    self.request.allHeaderFields[key] = value;
                 
             } while (0);
             
@@ -205,8 +219,17 @@ enum CGIConnectionStatus : long
             [self sendResponse];
             return;
         }
+        dbgprintf("ohttpd: info: got request to server %s\n", CGICSTR([self.context.server.listenURL absoluteString]));
+        
         [self.context process];
+        
         self.response = self.context.response;
+        
+        if (![self.response.responseBody length])
+        {
+            self.response.status = nil;
+            self.response.statusCode = 204;
+        }
         self.status = writing;
         [self sendResponse];
     }
@@ -241,7 +264,18 @@ enum CGIConnectionStatus : long
     
     for (NSString *key in self.response.allHeaderFields)
     {
-        [header appendFormat:@"%@: %@\r\n", key, self.response.allHeaderFields[key]];
+        id object = self.response.allHeaderFields[key];
+        if ([object isKindOfClass:[NSArray class]])
+        {
+            for (id value in object)
+            {
+                [header appendFormat:@"%@: %@\r\n", key, value];
+            }
+        }
+        else
+        {
+            [header appendFormat:@"%@: %@\r\n", key, object];
+        }
     }
     
     [header appendString:@"\r\n"];
@@ -260,6 +294,9 @@ enum CGIConnectionStatus : long
     }
     else if (![self.response.allHeaderFields[@"Connection"] isEqualToString:@"keep-alive"])
     {
+        self.request = nil;
+        self.response = nil;
+        self.context = nil;
         [self.socket disconnectAfterWriting];
     }
     else
@@ -279,6 +316,10 @@ enum CGIConnectionStatus : long
             holdTime = 15;
         
         dispatch_source_set_timer(self.timer, DISPATCH_TIME_NOW, holdTime * 1000000000, 0);
+        
+        self.request = nil;
+        self.response = nil;
+        self.context = nil;
         
         self.status = readingRequestInit;
         [self.socket readDataToData:[GCDAsyncSocket CRLFData] withTimeout:-1 tag:self.status];

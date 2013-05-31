@@ -19,9 +19,6 @@ CGIServer *__thisServer;
 @interface CGIServer ()
 
 @property BOOL running;
-@property NSMutableArray *listeners;
-@property NSMutableArray *vhosts;
-@property NSMutableDictionary *handlers;
 
 @end
 

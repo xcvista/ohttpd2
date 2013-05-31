@@ -16,6 +16,9 @@ CGIExtern NSString *CGIServerWillStopNotification;
 
 @property NSString *configFilePath;
 @property NSString *instanceIdentifier;
+@property NSMutableArray *listeners;
+@property NSMutableArray *vhosts;
+@property NSMutableDictionary *handlers;
 
 + (instancetype)server;
 

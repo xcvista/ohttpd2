@@ -18,6 +18,10 @@
 @property NSData *requestBody;
 @property BOOL SSL;
 
+@end
+
+@interface CGIHTTPRequest (CGIParsers)
+
 - (NSDictionary *)query;
 - (NSDictionary *)form;
 - (NSDictionary *)acceptMIME;

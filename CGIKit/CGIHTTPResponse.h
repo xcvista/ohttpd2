@@ -20,6 +20,10 @@
 
 - (id)initWithRequest:(CGIHTTPRequest *)request;
 
+@end
+
+@interface CGIHTTPResponse (CGIParsers)
+
 - (void)redirect:(NSString *)target;
 - (void)proxy:(NSString *)target;
 
