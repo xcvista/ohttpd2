@@ -13,15 +13,9 @@
 @protocol CGIHandler <NSObject>
 
 @required
-- (BOOL)canReuse;
-- (void)handle:(CGIHTTPContext *)context;
-+ (instancetype)handler;
++ (void)handle:(CGIHTTPContext *)context;
 
-@end
-
-@protocol CGIModule <CGIHandler>
-
-@required
-- (BOOL)processConfigure:(NSArray *)line;
+@optional
++ (void)handleConfigLine:(NSArray *)args;
 
 @end

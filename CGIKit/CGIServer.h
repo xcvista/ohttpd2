@@ -22,6 +22,8 @@ CGIExtern NSString *CGIServerWillStopNotification;
 
 + (instancetype)server;
 
+- (void)installHandler:(Class)handler forFileExtension:(NSString *)fileExtension;
+- (void)uninstallHandler:(Class)handler;
 - (void)start __attribute((noreturn));
 - (void)stop;
 - (void)reload;

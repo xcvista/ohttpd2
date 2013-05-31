@@ -83,6 +83,8 @@
 		1D50B9AC17476D4900385048 /* 403.html in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9AB17476D4900385048 /* 403.html */; };
 		1D50B9AE17478A2300385048 /* static.conf in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9AD17478A2300385048 /* static.conf */; };
 		1D50B9B017478A5D00385048 /* WebUIKit.conf in Resources */ = {isa = PBXBuildFile; fileRef = 1D50B9AF17478A5C00385048 /* WebUIKit.conf */; };
+		1D72DA92175914000020E96C /* CGIStaticFileHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 1D72DA90175914000020E96C /* CGIStaticFileHandler.h */; };
+		1D72DA93175914000020E96C /* CGIStaticFileHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D72DA91175914000020E96C /* CGIStaticFileHandler.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -195,6 +197,8 @@
 		1D50B9AB17476D4900385048 /* 403.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = 403.html; sourceTree = "<group>"; };
 		1D50B9AD17478A2300385048 /* static.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = static.conf; sourceTree = "<group>"; };
 		1D50B9AF17478A5C00385048 /* WebUIKit.conf */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebUIKit.conf; sourceTree = "<group>"; };
+		1D72DA90175914000020E96C /* CGIStaticFileHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CGIStaticFileHandler.h; sourceTree = "<group>"; };
+		1D72DA91175914000020E96C /* CGIStaticFileHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CGIStaticFileHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -358,6 +362,8 @@
 				1D50B977174681B400385048 /* CGIHTTPContext.m */,
 				1D50B9A51746CB2000385048 /* CGIHTTPStatus.h */,
 				1D50B9A61746CB2100385048 /* CGIHTTPStatus.m */,
+				1D72DA90175914000020E96C /* CGIStaticFileHandler.h */,
+				1D72DA91175914000020E96C /* CGIStaticFileHandler.m */,
 				1D50B8441744E62900385048 /* Supporting Files */,
 			);
 			path = CGIKit;
@@ -546,6 +552,7 @@
 				1D50B974174681A400385048 /* CGIHTTPResponse.h in Headers */,
 				1D50B978174681B400385048 /* CGIHTTPContext.h in Headers */,
 				1D50B9A71746CB2100385048 /* CGIHTTPStatus.h in Headers */,
+				1D72DA92175914000020E96C /* CGIStaticFileHandler.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -870,6 +877,7 @@
 				1D50B975174681A400385048 /* CGIHTTPResponse.m in Sources */,
 				1D50B979174681B400385048 /* CGIHTTPContext.m in Sources */,
 				1D50B9A81746CB2100385048 /* CGIHTTPStatus.m in Sources */,
+				1D72DA93175914000020E96C /* CGIStaticFileHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1648,6 +1656,7 @@
 				1D50B965174667FC00385048 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		1D50B99417468FAE00385048 /* Build configuration list for PBXNativeTarget "GCDAsyncSocket" */ = {
 			isa = XCConfigurationList;
@@ -1656,6 +1665,7 @@
 				1D50B99617468FAE00385048 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

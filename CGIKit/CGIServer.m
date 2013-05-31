@@ -9,6 +9,7 @@
 #import "CGIServer.h"
 #import "CGIListener.h"
 #import "CGIVirtualHost.h"
+#import "CGIHandler.h"
 #import <CGIStream/CGIStream.h>
 
 NSString *CGIServerReloadNotification = @"info.maxchan.ohttpd.reload";
@@ -50,6 +51,19 @@ CGIServer *__thisServer;
         self.listeners = [NSMutableArray array];
     }
     return self;
+}
+
+- (void)installHandler:(Class)handler forFileExtension:(NSString *)fileExtension
+{
+    self.handlers[fileExtension] = handler;
+}
+
+- (void)uninstallHandler:(Class)handler
+{
+    NSSet *extensions = [self.handlers keysOfEntriesPassingTest:^BOOL(id key, id obj, BOOL *stop) {
+        return obj == handler;
+    }];
+    [self.handlers removeObjectsForKeys:[extensions allObjects]];
 }
 
 - (void)start
@@ -102,6 +116,7 @@ CGIServer *__thisServer;
     
     NSUInteger status = 0; // 0 = outside
                            // 1 = Server block
+                           // 2 = Handler block
     
     id cache = nil;
     NSUInteger lineno = 0;
@@ -167,6 +182,43 @@ CGIServer *__thisServer;
                     status = 1;
                     cache = [[CGIVirtualHost alloc] initWithListenURL:listenURL];
                 }
+                else if ([line[0] isEqualToString:@"Handler"])
+                {
+                    // Virtual Host
+                    if ([line count] < 2)
+                    {
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need module after Handler\n", CGICSTR([fileName lastPathComponent]), lineno);
+                        continue;
+                    }
+                    
+                    Class targetClass = NSClassFromString(line[1]);
+                    if (!targetClass)
+                    {
+                        eprintf("ohttpd: error: %s:%lu cannot find handler class: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[1]));
+                        continue;
+                    }
+                    
+                    status = 2;
+                    cache = targetClass;
+                }
+                else if ([line[0] isEqualToString:@"SetHandler"])
+                {
+                    // Virtual Host
+                    if ([line count] < 3)
+                    {
+                        eprintf("ohttpd: error: %s:%lu cannot parse config file: need module after SetHandler\n", CGICSTR([fileName lastPathComponent]), lineno);
+                        continue;
+                    }
+                    
+                    Class targetClass = NSClassFromString(line[2]);
+                    if (!targetClass)
+                    {
+                        eprintf("ohttpd: error: %s:%lu cannot find handler class: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[1]));
+                        continue;
+                    }
+                    
+                    [self installHandler:targetClass forFileExtension:line[1]];
+                }
                 else
                 {
                     eprintf("ohttpd: error: %s:%lu unrecognized directive: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[0]));
@@ -207,6 +259,26 @@ CGIServer *__thisServer;
                 {
                     eprintf("ohttpd: error: %s:%lu unrecognized directive: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[0]));
                     continue;
+                }
+                break;
+            }
+            case 2:
+            {
+                Class target = cache;
+                if ([line isEqualToArray:@[@"End", @"Module"]])
+                {
+                    cache = nil;
+                    status = 0;
+                }
+                else
+                {
+                    @try
+                    {
+                        [target handleConfigLine:line];
+                    }
+                    @catch (NSException *exception) {
+                        eprintf("ohttpd: error: %s:%lu unrecognized directive: %s\n", CGICSTR([fileName lastPathComponent]), lineno, CGICSTR(line[0]));
+                    }
                 }
                 break;
             }
